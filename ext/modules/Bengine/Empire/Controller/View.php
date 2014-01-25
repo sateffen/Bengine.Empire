@@ -17,6 +17,14 @@ class Bengine_Empire_Controller_View extends Bengine_Game_Controller_Abstract
 		$planets = Game::getCollection("game/planet");
 		$planets->addUserFilter(Core::getUser()->get("userid"));
 		$planets->load();
+                // add ressources to planets
+                foreach($planets as $planet) 
+                {
+                    $tmp = new Bengine_Game_Planet($planet->get('planetid'), Core::getUser()->get("userid"));
+                    $tmp->getProduction()->addProd();
+                }
+                // reload all updated planetdata
+                $planets->reset()->load();
 		Core::getTemplate()->addLoop("planets", $planets);
 
 		/* @var Bengine_Game_Model_Collection_Construction $buildings */
